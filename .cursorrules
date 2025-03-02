@@ -8,3 +8,21 @@ no need to wait for the user's approval unless the action envolves deleting file
 
 # Lessons Learned
 1. When setting up a Vite application, make sure to include an index.html file in the root directory of the project. This file is essential for Vite to serve the application correctly.
+
+2. When working with SQLite databases in Docker containers, be careful with volume mappings. If a database file is mounted as a volume and the file doesn't exist, Docker might create a directory instead of a file, causing database connection errors.
+
+3. Using named volumes for database files in Docker is more reliable than direct file mounting, especially for SQLite databases.
+
+4. Entrypoint scripts are valuable for handling file system conflicts in Docker containers. They can check for and fix issues before the application starts.
+
+5. Always check container logs when troubleshooting Docker-related issues. They provide valuable information about what's happening inside the container.
+
+6. When adding new categories or options to a schema, remember to update both the backend (schemas) and frontend (components) to maintain consistency.
+
+7. When preparing a project for GitHub, create a comprehensive .gitignore file to exclude sensitive information, environment files, and unnecessary development artifacts.
+
+8. For React applications using Material UI, ensure that category options are consistently defined across components to maintain a unified user experience.
+
+9. Docker volume management is critical for data persistence. Ensure that database files are properly persisted using appropriate volume configurations.
+
+10. When troubleshooting database connection issues, simplify the database URL path to reduce potential permission or path resolution problems.
