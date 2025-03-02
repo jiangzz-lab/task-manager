@@ -1,0 +1,10 @@
+plan before taking actions
+
+note the lesson learned after a problem shows up and is solved
+
+you can test the scripts and install the dependencies by running commands in terminal
+
+no need to wait for the user's approval unless the action envolves deleting files
+
+# Lessons Learned
+1. When setting up a Vite application, make sure to include an index.html file in the root directory of the project. This file is essential for Vite to serve the application correctly.
