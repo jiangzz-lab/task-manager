@@ -5,6 +5,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 RUN npm install
+RUN npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
 
 COPY . .
 

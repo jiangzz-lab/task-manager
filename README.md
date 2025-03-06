@@ -6,9 +6,11 @@ A simple, clean task management application for personal use. This application p
 
 - Add, edit, delete, and complete tasks
 - Each task has a name, category (measurement, simulation, analysis, software, hardware), and optional details
+- Tasks have a priority field that determines their order in the list
 - Option to display or hide task details (default is hidden)
 - Clean, simple interface with easy-to-recognize icons and fonts
 - Responsive design that adapts to different screen sizes
+- Persistent database storage across container restarts
 
 ## Tech Stack
 
@@ -130,7 +132,7 @@ The frontend is built with React and uses the following key components:
 - **TaskForm.jsx**: Provides the form for adding new tasks
 - **TaskEditDialog.jsx**: Modal dialog for editing existing tasks
 
-The frontend communicates with the backend through RESTful API calls using the Fetch API.
+The frontend communicates with the backend through RESTful API calls using Axios.
 
 ### Backend Architecture
 
@@ -140,6 +142,8 @@ The backend is built with FastAPI and follows a layered architecture:
 - **models.py**: Defines the database models using SQLAlchemy ORM
 - **schemas.py**: Defines Pydantic schemas for request/response validation
 - **database.py**: Handles database connection and session management
+- **entrypoint.sh**: Script that runs when the container starts, ensuring proper database initialization
+- **init_db.py**: Script that checks for and creates database tables and columns if they don't exist
 
 ### Database Schema
 
@@ -154,6 +158,7 @@ The application uses a simple SQLite database with a single `tasks` table:
 │ category: String                    │
 │ details: String                     │
 │ completed: Boolean                  │
+│ priority: Integer                   │
 └─────────────────────────────────────┘
 ```
 
@@ -164,7 +169,17 @@ The application is containerized using Docker with two services:
 1. **Frontend Container**: Serves the React application on port 5173
 2. **Backend Container**: Runs the FastAPI server on port 8000
 
-The containers are configured to communicate with each other through the Docker network, and volumes are used to persist the SQLite database.
+The containers are configured to communicate with each other through the Docker network, and a named volume is used to persist the SQLite database across container restarts.
+
+### Database Persistence
+
+The application uses a named Docker volume (`db-data`) to ensure that the SQLite database persists across container restarts. The `entrypoint.sh` script includes logic to:
+
+1. Check if the database file exists and is a valid SQLite database
+2. Initialize the database schema if it doesn't exist
+3. Add any missing columns to existing tables (for backward compatibility)
+
+This ensures that your tasks are preserved even when you restart the Docker containers.
 
 ### Technology Choices
 
@@ -173,6 +188,7 @@ The containers are configured to communicate with each other through the Docker 
 - **FastAPI**: Selected for its high performance, automatic API documentation, and type checking
 - **SQLite**: Used for its simplicity and zero-configuration setup, suitable for a personal task manager
 - **Docker**: Ensures consistent deployment across different environments and simplifies setup
+- **Named Volumes**: Used for database persistence, providing a reliable way to store data across container restarts
 
 ## License
 

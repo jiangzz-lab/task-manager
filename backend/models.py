@@ -9,3 +9,4 @@ class Task(Base):
     category = Column(String)  # Can be 'measurement', 'simulation', or 'analysis'
     details = Column(Text, nullable=True)
     completed = Column(Boolean, default=False) 
+    priority = Column(Integer, default=0, index=True)  # New field for task ordering 

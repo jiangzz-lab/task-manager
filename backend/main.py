@@ -35,12 +35,23 @@ def read_root():
 
 @app.get("/tasks", response_model=List[schemas.Task])
 def get_tasks(db: Session = Depends(get_db)):
-    tasks = db.query(models.Task).all()
+    # Get tasks ordered by priority
+    tasks = db.query(models.Task).order_by(models.Task.priority).all()
     return tasks
 
 @app.post("/tasks", response_model=schemas.Task)
 def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
-    db_task = models.Task(**task.model_dump())
+    # Get the highest priority value
+    highest_priority = db.query(models.Task).order_by(models.Task.priority.desc()).first()
+    
+    # Set the new task's priority to be the highest + 1 (or 0 if no tasks exist)
+    new_priority = (highest_priority.priority + 1) if highest_priority else 0
+    
+    # Create task with the calculated priority
+    task_data = task.model_dump()
+    task_data["priority"] = new_priority
+    
+    db_task = models.Task(**task_data)
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
@@ -76,6 +87,22 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     db.delete(db_task)
     db.commit()
     return {"message": "Task deleted successfully"}
+
+# New endpoint for updating task priorities
+@app.post("/tasks/reorder")
+def reorder_tasks(task_ids: List[int], db: Session = Depends(get_db)):
+    # Validate that all task IDs exist
+    for i, task_id in enumerate(task_ids):
+        task = db.query(models.Task).filter(models.Task.id == task_id).first()
+        if task is None:
+            raise HTTPException(status_code=404, detail=f"Task with ID {task_id} not found")
+        
+        # Update the priority based on the order in the list
+        task.priority = i
+        db.add(task)
+    
+    db.commit()
+    return {"message": "Tasks reordered successfully"}
 
 if __name__ == "__main__":
     import uvicorn

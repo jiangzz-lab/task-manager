@@ -26,3 +26,15 @@ no need to wait for the user's approval unless the action envolves deleting file
 9. Docker volume management is critical for data persistence. Ensure that database files are properly persisted using appropriate volume configurations.
 
 10. When troubleshooting database connection issues, simplify the database URL path to reduce potential permission or path resolution problems.
+
+11. When testing API endpoints in Windows PowerShell, use the Swagger UI (available at http://localhost:8000/docs for FastAPI) instead of curl commands, as PowerShell may have issues with curl syntax and execution.
+
+12. When implementing drag-and-drop functionality in React, use modern libraries like @dnd-kit that are compatible with the latest React versions. Be aware that some older libraries like react-beautiful-dnd may have compatibility issues with newer React versions.
+
+13. When installing npm packages in a Docker container, add them to the Dockerfile rather than just installing them locally. This ensures the packages are available when the container is rebuilt.
+
+14. For drag-and-drop interfaces, make the entire item draggable rather than just a handle for better user experience and intuitive interaction.
+
+15. When implementing priority-based sorting with drag-and-drop, ensure that all affected items have their priorities updated, not just the dragged item. This maintains consistent ordering across page refreshes.
+
+16. When working with IDs in JavaScript, be mindful of type conversions. String IDs from DOM elements may need to be converted to integers for database operations. 
